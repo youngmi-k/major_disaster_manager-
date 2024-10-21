@@ -1,7 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 void main() {
   runApp(MyApp());
@@ -12,9 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Login App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: LoginPage(),
     );
   }
@@ -30,62 +27,35 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
   String message = '';
 
-  // 로그인 함수
-  Future<void> login(String userId, String password) async {
-    // 프록시 서버 URL로 수정
-    final String url = 'http://localhost:3000/login';  // 프록시 서버 경로
+  Future<void> login() async {
+    final String userId = userIdController.text;
+    final String password = passwordController.text;
 
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json', // 응답을 JSON으로 받기 위한 헤더
-        },
-        body: jsonEncode({
-          'user_id': userId,
-          'password': password,
-          'user_nm': '',
-          'tel_no': '',
-        }),
-      );
+    // 서버에 로그인 요청을 보냅니다.
+    final response = await http.post(
+      Uri.parse('http://localhost:3000/login'), // 로그인 요청 엔드포인트
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'user_id': userId,
+        'password': password,
+      }),
+    );
 
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-        if (responseData['success'] == true) {
-          await saveUserInfo(userId);
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => HomePage(),
-          ));
-        } else {
-          setState(() {
-            message = '로그인 실패: ${responseData['message']}';
-          });
-        }
-      } else {
-        setState(() {
-          message = '서버 오류: ${response.statusCode}';
-        });
-      }
-    } catch (e) {
+    if (response.statusCode == 200) { // 로그인 성공 시 200 상태 코드 확인
       setState(() {
-        message = '네트워크 오류: $e';
+        message = '로그인 성공!';
+      });
+    } else {
+      setState(() {
+        message = '로그인 실패: ${response.body}';
       });
     }
-  }
-
-  // SharedPreferences를 사용하여 로그인 정보 저장
-  Future<void> saveUserInfo(String userId) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_id', userId);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('로그인'),
-      ),
+      appBar: AppBar(title: Text('로그인')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -101,32 +71,13 @@ class _LoginPageState extends State<LoginPage> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                login(userIdController.text, passwordController.text);
-              },
+              onPressed: login,
               child: Text('로그인'),
             ),
             SizedBox(height: 20),
-            Text(
-              message,
-              style: TextStyle(color: Colors.red),
-            ),
+            Text(message),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('메인 화면'),
-      ),
-      body: Center(
-        child: Text('로그인 성공!'),
       ),
     );
   }
