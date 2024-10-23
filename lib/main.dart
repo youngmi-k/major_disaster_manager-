@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'home_screen.dart'; // HomeScreen 임포트
 
 void main() {
   runApp(MyApp());
@@ -41,10 +42,15 @@ class _LoginPageState extends State<LoginPage> {
       }),
     );
 
-    if (response.statusCode == 200) { // 로그인 성공 시 200 상태 코드 확인
+    if (response.statusCode == 200) { // 로그인 성공 시
       setState(() {
         message = '로그인 성공!';
       });
+      // 로그인 성공 후 HomeScreen으로 이동
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
     } else {
       setState(() {
         message = '로그인 실패: ${response.body}';
