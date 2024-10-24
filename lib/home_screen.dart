@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/page/notice_page.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -73,7 +74,10 @@ class HomeScreen extends StatelessWidget {
                   icon: Icons.campaign,
                   label: '공지사항',
                   onPressed: () {
-                    // 공지사항 버튼 클릭 시 액션
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => NoticePage(notices: notices)),
+                    );
                   },
                 ),
                 MenuButton(
