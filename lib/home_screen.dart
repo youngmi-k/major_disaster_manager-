@@ -63,20 +63,6 @@ class HomeScreen extends StatelessWidget {
                   },
                 ),
                 MenuButton(
-                  icon: Icons.forum,
-                  label: '소통마당',
-                  onPressed: () {
-                    // 소통마당 버튼 클릭 시 액션
-                  },
-                ),
-                MenuButton(
-                  icon: Icons.announcement,
-                  label: '공지사항',
-                  onPressed: () {
-                    // 공지사항 버튼 클릭 시 액션
-                  },
-                ),
-                MenuButton(
                   icon: Icons.report,
                   label: '안전보이스',
                   onPressed: () {
@@ -84,10 +70,24 @@ class HomeScreen extends StatelessWidget {
                   },
                 ),
                 MenuButton(
-                  icon: Icons.qr_code_scanner,
-                  label: 'QR 코드',
+                  icon: Icons.campaign,
+                  label: '공지사항',
                   onPressed: () {
-                    // QR 코드 버튼 클릭 시 액션
+                    // 공지사항 버튼 클릭 시 액션
+                  },
+                ),
+                MenuButton(
+                  icon: Icons.shield,
+                  label: '위험성 평가',
+                  onPressed: () {
+                    // 위험성평가 버튼 클릭 시 액션
+                  },
+                ),
+                MenuButton(
+                  icon: Icons.notifications,
+                  label: '중대재해 알림',
+                  onPressed: () {
+                    // 중대재해 알림 버튼 클릭 시 액션
                   },
                 ),
                 MenuButton(
