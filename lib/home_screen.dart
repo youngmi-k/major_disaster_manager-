@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/page/notice_page.dart';
+import 'package:untitled/page/safetyVoice_page.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -67,7 +68,10 @@ class HomeScreen extends StatelessWidget {
                   icon: Icons.report,
                   label: '안전보이스',
                   onPressed: () {
-                    // 안전보이스 버튼 클릭 시 액션
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SafetyVoicePage()),
+                    );
                   },
                 ),
                 MenuButton(
