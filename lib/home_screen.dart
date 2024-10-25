@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/page/notice_page.dart';
+import 'package:untitled/page/safetyVoice_page.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,  // 배경색을 흰색으로 설정
       appBar: AppBar(
-        title: Text('중대재해 관리 앱'),
+        toolbarHeight: 40.0,  // 높이를 100으로 설정
+        title: Text(''),
         centerTitle: true,
+        backgroundColor: Color(0xFFFDD126),
         actions: [
           // OutlinedButton으로 테두리 있는 로그아웃 버튼 생성
           Padding(
@@ -18,42 +22,36 @@ class HomeScreen extends StatelessWidget {
                 print("로그아웃 버튼 클릭됨");
               },
               style: OutlinedButton.styleFrom(
-                side: BorderSide(color: Colors.black, width: 1.5), // 테두리 설정
+                side: BorderSide(color: Colors.white, width: 1.0), // 테두리 설정
               ),
               child: Text(
                 '로그아웃',
                 style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
+                  color: Colors.white,
+                  fontSize: 13,
                 ),
               ),
             ),
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // 사용자 정보 카드
-          UserCard(),
-          SizedBox(height: 10),
-          // "메뉴" 제목 바
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
-            color: Colors.grey.shade200,
-            child: Text(
-              '메뉴',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // 이미지 추가
+            Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: Image.asset('assets/title_image.png'),  // 이미지 파일 경로
             ),
-          ),
-          SizedBox(height: 5),
-          // 메뉴 버튼들
-          Expanded(
-            child: GridView.count(
+            SizedBox(height: 13),
+            // 사용자 정보 카드
+            UserCard(),
+
+            // 메뉴 버튼들 - Expanded 대신 shrinkWrap을 사용하여 GridView 스크롤을 활성화
+            GridView.count(
               crossAxisCount: 3,
+              shrinkWrap: true,  // GridView의 높이를 자식 요소에 맞춤
+              physics: NeverScrollableScrollPhysics(),  // GridView 자체 스크롤 비활성화
               padding: const EdgeInsets.all(8.0),
               children: [
                 MenuButton(
@@ -67,7 +65,10 @@ class HomeScreen extends StatelessWidget {
                   icon: Icons.report,
                   label: '안전보이스',
                   onPressed: () {
-                    // 안전보이스 버튼 클릭 시 액션
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SafetyVoicePage()),
+                    );
                   },
                 ),
                 MenuButton(
@@ -103,31 +104,24 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-          // 하단에 "선문대학교" 문구 추가
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              '선문대학교',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-// 사용자 카드 위젯
 class UserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 2.0,  // 그림자 깊이 설정 (1.0 ~ 10.0 등 값 조정 가능)
+      color: Colors.white,  // 카드의 배경색 설정
       margin: EdgeInsets.all(16.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),  // 모서리를 둥글게 처리
+        side: BorderSide(color: Colors.yellow, width: 1.5),  // 테두리 색상 및 두께
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -166,6 +160,8 @@ class UserCard extends StatelessWidget {
   }
 }
 
+
+
 // 메뉴 버튼 위젯
 class MenuButton extends StatelessWidget {
   final IconData icon;
@@ -179,8 +175,13 @@ class MenuButton extends StatelessWidget {
     return GestureDetector(
       onTap: () => onPressed(),
       child: Card(
-        elevation: 2.0,
+        elevation: 2.0,  // 그림자 깊이
+        color: Colors.white,  // 버튼 내부 배경색을 흰색으로 설정
         margin: const EdgeInsets.all(8.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),  // 모서리를 둥글게 처리
+          side: BorderSide(color: Colors.yellow, width: 1.5),  // 테두리 색상 노란색으로 설정
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -199,3 +200,7 @@ class MenuButton extends StatelessWidget {
     );
   }
 }
+
+void main() => runApp(MaterialApp(
+  home: HomeScreen(),
+));
