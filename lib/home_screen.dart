@@ -6,6 +6,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,  // 배경색을 흰색으로 설정
       appBar: AppBar(
         toolbarHeight: 40.0,  // 높이를 100으로 설정
         title: Text(''),
@@ -42,7 +43,7 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.all(0.0),
               child: Image.asset('assets/title_image.png'),  // 이미지 파일 경로
             ),
-
+            SizedBox(height: 13),
             // 사용자 정보 카드
             UserCard(),
 
@@ -103,7 +104,6 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-
           ],
         ),
       ),
@@ -120,7 +120,7 @@ class UserCard extends StatelessWidget {
       margin: EdgeInsets.all(16.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),  // 모서리를 둥글게 처리
-        side: BorderSide(color: Colors.yellow, width: 1.0),  // 테두리 색상 및 두께
+        side: BorderSide(color: Colors.yellow, width: 1.5),  // 테두리 색상 및 두께
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -180,7 +180,7 @@ class MenuButton extends StatelessWidget {
         margin: const EdgeInsets.all(8.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),  // 모서리를 둥글게 처리
-          side: BorderSide(color: Colors.yellow, width: 1.0),  // 테두리 색상 노란색으로 설정
+          side: BorderSide(color: Colors.yellow, width: 1.5),  // 테두리 색상 노란색으로 설정
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
