@@ -43,13 +43,14 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (response.statusCode == 200) { // 로그인 성공 시
-      setState(() {
-        message = '로그인 성공!';
-      });
-      // 로그인 성공 후 HomeScreen으로 이동
+      final userData = json.decode(response.body); // 사용자 데이터 가져오기
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => HomeScreen(
+          userId: userId,
+          userName: userData['user_nm'],
+          areaInCharge: userData['area_in_charge'],
+        )),
       );
     } else {
       setState(() {
