@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/page/notice_page.dart';
 import 'package:untitled/page/safetyVoice_page.dart';
+import 'main.dart'; // 로그인 페이지 임포트
 
 class HomeScreen extends StatelessWidget {
   final String userId;
@@ -24,7 +25,10 @@ class HomeScreen extends StatelessWidget {
             child: OutlinedButton(
               onPressed: () {
                 // 로그아웃 기능
-                print("로그아웃 버튼 클릭됨");
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyApp()), // 로그인 페이지로 이동
+                );
               },
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: Colors.white, width: 1.0),

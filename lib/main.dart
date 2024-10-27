@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'home_screen.dart'; // HomeScreen 임포트
+import 'home_screen.dart'; // HomeScreen 파일을 임포트합니다.
 
 void main() {
   runApp(MyApp());
@@ -32,9 +32,8 @@ class _LoginPageState extends State<LoginPage> {
     final String userId = userIdController.text;
     final String password = passwordController.text;
 
-    // 서버에 로그인 요청을 보냅니다.
     final response = await http.post(
-      Uri.parse('http://localhost:3000/login'), // 로그인 요청 엔드포인트
+      Uri.parse('http://localhost:3000/login'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         'user_id': userId,
@@ -42,8 +41,8 @@ class _LoginPageState extends State<LoginPage> {
       }),
     );
 
-    if (response.statusCode == 200) { // 로그인 성공 시
-      final userData = json.decode(response.body); // 사용자 데이터 가져오기
+    if (response.statusCode == 200) {
+      final userData = json.decode(response.body);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomeScreen(
