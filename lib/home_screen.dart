@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/page/notice_page.dart';
 import 'package:untitled/page/safetyVoice_page.dart';
+import 'package:untitled/page/checklist_page.dart'; // ChecklistPage 임포트 추가
 import 'main.dart'; // 로그인 페이지 임포트
 
 class HomeScreen extends StatelessWidget {
@@ -24,7 +25,6 @@ class HomeScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             child: OutlinedButton(
               onPressed: () {
-                // 로그아웃 기능
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => MyApp()), // 로그인 페이지로 이동
@@ -63,7 +63,11 @@ class HomeScreen extends StatelessWidget {
                   icon: Icons.checklist,
                   label: '체크리스트',
                   onPressed: () {
-                    // 체크리스트 버튼 클릭 시 액션
+                    // 체크리스트 버튼 클릭 시 ChecklistPage로 이동
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChecklistPage(userId: userId)),
+                    );
                   },
                 ),
                 MenuButton(
