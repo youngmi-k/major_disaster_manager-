@@ -8,7 +8,11 @@ class NoticePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('공지사항')),
+      backgroundColor: Colors.white,  // 배경색을 흰색으로 설정
+      appBar: AppBar(
+        title: Text('공지사항'),
+        centerTitle: true,
+        backgroundColor: Colors.white,),
       body: ListView.builder(
         itemCount: notices.length,
         itemBuilder: (context, index) {
@@ -16,6 +20,7 @@ class NoticePage extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
             child: Card(
+              color: Colors.grey.shade100,
               child: ExpansionTile(
                 title: Text(notice.title),
                 subtitle: Text(notice.date),
@@ -38,9 +43,9 @@ class NoticePage extends StatelessWidget {
 
 // 공지사항 데이터 모델 정의
 class Notice {
-  final String title;
-  final String date;
-  final String content;
+  final String title; //제목
+  final String date; //작성일
+  final String content; //내용
 
   Notice({required this.title, required this.date, required this.content});
 }
