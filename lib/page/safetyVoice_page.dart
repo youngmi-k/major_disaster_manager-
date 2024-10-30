@@ -32,10 +32,12 @@ class _SafetyVoicePageState extends State<SafetyVoicePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,  // 키보드가 올라왔을 때 화면이 조정되도록 설정
       appBar: AppBar(
         title: Text('안전보이스 작성'),
         centerTitle: true,
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
