@@ -3,6 +3,7 @@ import 'package:untitled/page/notice_page.dart';
 import 'package:untitled/page/safetyVoice_page.dart';
 import 'package:untitled/page/checkList_page.dart';
 import 'package:untitled/page/riskAssessment_page.dart';
+import 'package:untitled/page/education_page.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -107,7 +108,10 @@ class HomeScreen extends StatelessWidget {
                   icon: Icons.menu_book,
                   label: '교육현황',
                   onPressed: () {
-                    // 교육현황 버튼 클릭 시 액션
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EducationPage()),
+                    );
                   },
                 ),
               ],
