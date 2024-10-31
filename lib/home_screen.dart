@@ -3,6 +3,7 @@ import 'package:untitled/page/notice_page.dart';
 import 'package:untitled/page/safetyVoice_page.dart';
 import 'package:untitled/page/checkList_page.dart';
 import 'package:untitled/page/riskAssessment_page.dart';
+import 'main.dart'; // 로그인 페이지 임포트
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -20,8 +21,10 @@ class HomeScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             child: OutlinedButton(
               onPressed: () {
-                // 로그아웃 기능
-                print("로그아웃 버튼 클릭됨");
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyApp()), // 로그인 페이지로 이동
+                );
               },
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: Colors.white, width: 1.0), // 테두리 설정
