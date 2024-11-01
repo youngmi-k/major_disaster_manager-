@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import 'package:intl/intl.dart';
 
 class RiskDetailPage extends StatefulWidget {
+  final String company;
   final String title;
   final String workplace;
+  final String type;
   final String date;
   final String name;
   final bool inspection;
 
-  RiskDetailPage({required this.title, required this.workplace, required this.date, required this.name, required this.inspection});
+  RiskDetailPage({required this.company, required this.title, required this.workplace, required this.type, required this.date, required this.name, required this.inspection});
 
   @override
   _RiskDetailPageState createState() => _RiskDetailPageState();
@@ -29,70 +28,91 @@ class _RiskDetailPageState extends State<RiskDetailPage> {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          // 위험성 평가 정보 섹션 추가
+          // 위험성평가 정보 섹션 추가
           Card(
-            color: Colors.yellow[50],
+            color: Colors.white,
             margin: EdgeInsets.only(bottom: 16.0),
-            elevation: 2.0,
+            elevation: 4.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              side: BorderSide(color: Colors.black, width: 1.5),
+            ),
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.title,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // 양 끝으로 정렬
+                    children: [
+                      Text(
+                        widget.title,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // 여백 추가로 타원 모양 조정
+                        decoration: BoxDecoration(
+                          color: widget.inspection ? Colors.blueAccent.withOpacity(0.1) : Colors.redAccent.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(20), // 타원 모양
+                          border: Border.all(
+                            color: widget.inspection ? Colors.blueAccent : Colors.redAccent,
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Text(
+                          '${widget.inspection ? "결재 상신" : "결재 대기"}',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: widget.inspection ? Colors.blueAccent : Colors.redAccent,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
+                  Divider(color: Colors.grey.shade300, thickness: 1.5, height: 20),
                   SizedBox(height: 8),
-                  Text(
-                    '사업장: ${widget.workplace}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    '일시: ${widget.date}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    '평가자: ${widget.name}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    '결재여부: ${widget.inspection ? "결재 상신" : "결재 대기"}',
-                    style: TextStyle(fontSize: 16, color: widget.inspection ? Colors.blue : Colors.red),
-                  ),
+                  _buildDetailRow("업체명", widget.company),
+                  _buildDetailRow("사업장", widget.workplace),
+                  _buildDetailRow("평가 종류", widget.type),
+                  _buildDetailRow("일시", widget.date),
+                  _buildDetailRow("평가자", widget.name),
+                  SizedBox(height: 16),
                 ],
               ),
             ),
           ),
-          // 체크리스트 항목들
+          // 위험성평가 데이터 항목들
           ...RiskItems.map((item) {
             return Card(
               color: Colors.grey.shade100,
+              elevation: 4.0,
               margin: const EdgeInsets.symmetric(vertical: 8.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '단위작업: ${item.unitOperation}',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      '유해.위험요인: ${item.riskFactor}',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
+                    _buildDetailRow("단위작업", item.unitOperation),
+                    _buildDetailRow("유해.위험요인", item.riskFactor),
+                    Divider(thickness: 1, color: Colors.grey.shade300), // 구분선 추가
                     SizedBox(height: 16),
-                    Text('위험수준: '),
+                    Text(
+                      '위험수준: ',
+                      style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+                    ),
                     Row(
                       children: item.options.map<Widget>((option) {
                         return Expanded(
                           child: RadioListTile(
-                            title: Text(option),
+                            title: Text(option, style: TextStyle(fontSize: 14)),
                             value: option,
                             groupValue: item.selectedOption,
                             onChanged: (value) {
@@ -104,35 +124,55 @@ class _RiskDetailPageState extends State<RiskDetailPage> {
                         );
                       }).toList(),
                     ),
+                    Divider(thickness: 1, color: Colors.grey.shade300), // 구분선 추가
+                    SizedBox(height: 8),
+                    _buildDetailRow("개선 대책", item.measure),
+                    _buildDetailRow("개선 담당자", item.manager),
                     SizedBox(height: 16),
-                    Text(
-                      '개선 대책: ${item.measure}',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '개선 예정일:',
+                              style: TextStyle(fontSize: 14, color: Colors.grey[800]),
+                            ),
+                            Text(
+                              item.scheduledDate,
+                              style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '개선 완료일:',
+                              style: TextStyle(fontSize: 14, color: Colors.grey[800]),
+                            ),
+                            Text(
+                              item.completionDate,
+                              style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 16),
-                    Text(
-                      '개선 예정일: ${item.scheduledDate}',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      '개선 완료일: ${item.completionDate}',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      '개선 담당자: ${item.manager}',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
+
                   ],
                 ),
               ),
             );
           }).toList(),
+
         ],
       ),
       // 결재상신 버튼을 하단에 고정
-      bottomNavigationBar: Padding(
+      bottomNavigationBar: widget.inspection == false
+          ? Padding(
         padding: const EdgeInsets.all(16.0),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -148,6 +188,27 @@ class _RiskDetailPageState extends State<RiskDetailPage> {
           },
           child: Text('결재 상신', style: TextStyle(fontSize: 18)),
         ),
+      )
+          : null, // inspection이 true일 때는 bottomNavigationBar가 없음
+    );
+  }
+
+  // 위험성평가 정보 세부 항목 생성 함수
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            '$label:',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey[800]),
+          ),
+          Text(
+            value,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
+          ),
+        ],
       ),
     );
   }

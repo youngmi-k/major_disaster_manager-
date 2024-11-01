@@ -48,27 +48,49 @@ class _ChecklistDetailPageState extends State<ChecklistDetailPage> {
         children: [
           // 점검표 정보 섹션 추가
           Card(
-            color: Colors.yellow[50],
+            color: Colors.white,
             margin: EdgeInsets.only(bottom: 16.0),
-            elevation: 2.0,
+            elevation: 4.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              side: BorderSide(color: Colors.black, width: 1.5),
+            ),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center, // 모든 요소를 가운데 정렬
                 children: [
                   Text(
                     widget.title,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center, // 텍스트 가운데 정렬
                   ),
                   SizedBox(height: 8),
                   Text(
                     '일시: $today',
                     style: TextStyle(fontSize: 16),
+                    textAlign: TextAlign.center, // 텍스트 가운데 정렬
                   ),
                   SizedBox(height: 8),
-                  Text(
-                    '점검여부: ${widget.inspection ? "점검 완료" : "점검 미완료"}',
-                    style: TextStyle(fontSize: 16, color: widget.inspection ? Colors.blue : Colors.red),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: widget.inspection ? Colors.blueAccent.withOpacity(0.1) : Colors.redAccent.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: widget.inspection ? Colors.blueAccent : Colors.redAccent,
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Text(
+                      '${widget.inspection ? "점검 완료" : "점검 미완료"}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: widget.inspection ? Colors.blueAccent : Colors.redAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center, // 텍스트 가운데 정렬
+                    ),
                   ),
                 ],
               ),
@@ -180,7 +202,8 @@ class _ChecklistDetailPageState extends State<ChecklistDetailPage> {
         ],
       ),
       // 작성완료 버튼을 하단에 고정
-      bottomNavigationBar: Padding(
+      bottomNavigationBar: widget.inspection == false
+          ? Padding(
         padding: const EdgeInsets.all(16.0),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -192,11 +215,12 @@ class _ChecklistDetailPageState extends State<ChecklistDetailPage> {
             ),
           ),
           onPressed: () {
-            print("작성완료 버튼 클릭됨");
+            print("점검 완료 버튼 클릭됨");
           },
-          child: Text('작성 완료', style: TextStyle(fontSize: 18)),
+          child: Text('점검 완료', style: TextStyle(fontSize: 18)),
         ),
-      ),
+      )
+          : null, // inspection이 true일 때는 bottomNavigationBar가 없음
     );
   }
 }
