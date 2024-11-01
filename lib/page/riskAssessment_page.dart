@@ -1,201 +1,244 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:untitled/page/riskDetail_page.dart';
 
-class RiskAssessmentPage extends StatefulWidget {
+class RiskDetailPage extends StatefulWidget {
+  final String company;
+  final String title;
+  final String workplace;
+  final String type;
+  final String date;
+  final String name;
+  final bool inspection;
+
+  RiskDetailPage({required this.company, required this.title, required this.workplace, required this.type, required this.date, required this.name, required this.inspection});
+
   @override
-  _RiskAssessmentPageState createState() => _RiskAssessmentPageState();
+  _RiskDetailPageState createState() => _RiskDetailPageState();
 }
 
-class _RiskAssessmentPageState extends State<RiskAssessmentPage> {
-  // 드롭다운 메뉴에서 선택된 값 저장
-  String selectedBusiness = 'All';
-  String selectedAssessmentType = 'All';
-  DateTimeRange? selectedDateRange;
-
-  // 드롭다운 메뉴 항목
-  final List<String> businessOptions = ['All', '공학관', '보건의료관', '본관', '스포츠과학관', '원화관', '인문관', '자연과학관'];
-  final List<String> assessmentOptions = ['All', '최초', '정기', '수시'];
-
-  // 날짜 선택 함수
-  Future<void> _selectDateRange(BuildContext context) async {
-    DateTimeRange? picked = await showDateRangePicker(
-      context: context,
-      firstDate: DateTime(2023),
-      lastDate: DateTime.now(),
-      initialDateRange: selectedDateRange ?? DateTimeRange(
-        start: DateTime.now().subtract(Duration(days: 30)),
-        end: DateTime.now(),
-      ),
-    );
-
-    if (picked != null && picked != selectedDateRange) {
-      setState(() {
-        selectedDateRange = picked;
-      });
-    }
-  }
-
+class _RiskDetailPageState extends State<RiskDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("위험성 평가"),
+        title: Text('위험성 평가(3단계)'),
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
-      body: Padding(
+      body: ListView(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                // 사업장 선택
-                Expanded(
-                  child: DropdownButtonFormField<String>(
-                    decoration: InputDecoration(
-                      labelText: '사업장',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0), // 타원형 테두리
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
-                    ),
-                    value: selectedBusiness,
-                    items: businessOptions.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        selectedBusiness = newValue!;
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(width: 16),
-                // 위험성 평가 종류 선택
-                Expanded(
-                  child: DropdownButtonFormField<String>(
-                    decoration: InputDecoration(
-                      labelText: '위험성평가종류',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0), // 타원형 테두리
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
-                    ),
-                    value: selectedAssessmentType,
-                    items: assessmentOptions.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        selectedAssessmentType = newValue!;
-                      });
-                    },
-                  ),
-                ),
-              ],
+        children: [
+          // 위험성평가 정보 섹션 추가
+          Card(
+            color: Colors.white,
+            margin: EdgeInsets.only(bottom: 16.0),
+            elevation: 4.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              side: BorderSide(color: Colors.black, width: 1.5),
             ),
-            SizedBox(height: 16),
-            // 기간 선택
-            Row(
-              children: [
-                Text("기간: ", style: TextStyle(fontSize: 16)),
-                SizedBox(width: 8),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () => _selectDateRange(context),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 8),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        selectedDateRange == null
-                            ? '날짜 선택'
-                            : '${DateFormat('yyyy.MM.dd').format(
-                            selectedDateRange!.start)} ~ ${DateFormat(
-                            'yyyy.MM.dd').format(selectedDateRange!.end)}',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 8),
-                Icon(Icons.calendar_today, color: Colors.grey),
-              ],
-            ),
-            SizedBox(height: 16),
-            //위험성 평가 목록
-            Expanded(
-              child: ListView(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildRiskAssessmentItem('원재료 입고', '보건의료관', '2024-10-30', '강영미', false),
-                  _buildRiskAssessmentItem('정육원 보관', '본관', '2024-08-28', '박상영', true),
-                  _buildRiskAssessmentItem('지게차 입출고', '인문관', '2024-06-28', '유선호', false),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // 양 끝으로 정렬
+                    children: [
+                      Text(
+                        widget.title,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // 여백 추가로 타원 모양 조정
+                        decoration: BoxDecoration(
+                          color: widget.inspection ? Colors.blueAccent.withOpacity(0.1) : Colors.redAccent.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(20), // 타원 모양
+                          border: Border.all(
+                            color: widget.inspection ? Colors.blueAccent : Colors.redAccent,
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Text(
+                          '${widget.inspection ? "결재 상신" : "결재 대기"}',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: widget.inspection ? Colors.blueAccent : Colors.redAccent,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(color: Colors.grey.shade300, thickness: 1.5, height: 20),
+                  SizedBox(height: 8),
+                  _buildDetailRow("업체명", widget.company),
+                  _buildDetailRow("사업장", widget.workplace),
+                  _buildDetailRow("평가 종류", widget.type),
+                  _buildDetailRow("일시", widget.date),
+                  _buildDetailRow("평가자", widget.name),
+                  SizedBox(height: 16),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRiskAssessmentItem(String title, String workplace, String date, String name, bool inspection) {
-    return Card(
-      color: Colors.grey.shade100,
-      elevation: 2.0,
-      margin: EdgeInsets.symmetric(vertical: 8),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: inspection ? Colors.blueAccent : Colors.grey,
-          child: Text(
-            inspection ? '결재' : '대기',
-            style: TextStyle(fontSize: 12, color: Colors.white),
           ),
-        ),
-        title: Text(title),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('사업장: $workplace', style: TextStyle(color: Colors.grey)),
-            Text('평가일: $date', style: TextStyle(color: Colors.grey)),
-            Text('평가자: $name', style: TextStyle(color: Colors.grey)),
-          ],
-        ),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => RiskDetailPage(
-                title: title,
-                workplace: workplace,
-                date: date,
-                name: name,
-                inspection: inspection,
+          // 위험성평가 데이터 항목들
+          ...RiskItems.map((item) {
+            return Card(
+              color: Colors.grey.shade100,
+              elevation: 4.0,
+              margin: const EdgeInsets.symmetric(vertical: 8.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
               ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildDetailRow("단위작업", item.unitOperation),
+                    _buildDetailRow("유해.위험요인", item.riskFactor),
+                    Divider(thickness: 1, color: Colors.grey.shade300), // 구분선 추가
+                    SizedBox(height: 16),
+                    Text(
+                      '위험수준: ',
+                      style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+                    ),
+                    Row(
+                      children: item.options.map<Widget>((option) {
+                        return Expanded(
+                          child: RadioListTile(
+                            title: Text(option, style: TextStyle(fontSize: 14)),
+                            value: option,
+                            groupValue: item.selectedOption,
+                            onChanged: (value) {
+                              setState(() {
+                                item.selectedOption = value;
+                              });
+                            },
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    Divider(thickness: 1, color: Colors.grey.shade300), // 구분선 추가
+                    SizedBox(height: 8),
+                    _buildDetailRow("개선 대책", item.measure),
+                    _buildDetailRow("개선 담당자", item.manager),
+                    SizedBox(height: 16),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '개선 예정일:',
+                              style: TextStyle(fontSize: 14, color: Colors.grey[800]),
+                            ),
+                            Text(
+                              item.scheduledDate,
+                              style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '개선 완료일:',
+                              style: TextStyle(fontSize: 14, color: Colors.grey[800]),
+                            ),
+                            Text(
+                              item.completionDate,
+                              style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+
+        ],
+      ),
+      // 결재상신 버튼을 하단에 고정
+      bottomNavigationBar: widget.inspection == false
+          ? Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.black,
+            foregroundColor: Colors.white,
+            padding: EdgeInsets.symmetric(vertical: 16.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
             ),
-          );
-        },
+          ),
+          onPressed: () {
+            print("결재 상신 버튼 클릭됨");
+          },
+          child: Text('결재 상신', style: TextStyle(fontSize: 18)),
+        ),
+      )
+          : null, // inspection이 true일 때는 bottomNavigationBar가 없음
+    );
+  }
+
+  // 위험성평가 정보 세부 항목 생성 함수
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            '$label:',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey[800]),
+          ),
+          Text(
+            value,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
+          ),
+        ],
       ),
     );
   }
 }
 
-void main() {
-  runApp(MaterialApp(home: RiskAssessmentPage()));
+// 위험성평가 데이터 모델 정의
+class RiskItem {
+  final String unitOperation; // 단위작업
+  final String riskFactor; // 위험요인
+  final List<String> options;
+  final String measure; // 개선대책
+  final String scheduledDate; // 개선 예정일
+  final String completionDate; // 개선 완료일
+  final String manager; // 개선 담당자
+  String? selectedOption;
+
+  RiskItem({
+    required this.unitOperation,
+    required this.riskFactor,
+    this.options = const ['상', '중', '하'],
+    this.selectedOption,
+    required this.measure,
+    required this.scheduledDate,
+    required this.completionDate,
+    required this.manager,
+  });
 }
+
+// 샘플 데이터 생성
+final List<RiskItem> RiskItems = [
+  RiskItem(unitOperation: '원재료 하차', riskFactor: '지게차 충돌', measure: '신호수 배치', scheduledDate: '2024-10-30', completionDate: '2024-10-30', manager: '강영미'),
+  RiskItem(unitOperation: '재료 입고', riskFactor: '컨배이어밸트 끼임', measure: '안전교육, 장갑 착용', scheduledDate: '2024-10-30', completionDate: '2024-10-30', manager: '강영미'),
+];
