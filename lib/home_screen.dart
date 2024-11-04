@@ -12,7 +12,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,  // 배경색을 흰색으로 설정
       appBar: AppBar(
-        toolbarHeight: 40.0,  // 높이를 40으로 설정
+        toolbarHeight: 40.0,  // 높이를 100으로 설정
         title: Text(''),
         centerTitle: true,
         backgroundColor: Color(0xFFFDD126),
@@ -24,10 +24,6 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 // 로그아웃 기능
                 print("로그아웃 버튼 클릭됨");
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()), // LoginPage로 이동
-                );
               },
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: Colors.white, width: 1.0), // 테두리 설정
@@ -176,6 +172,8 @@ class UserCard extends StatelessWidget {
     );
   }
 }
+
+
 
 // 메뉴 버튼 위젯
 class MenuButton extends StatelessWidget {
