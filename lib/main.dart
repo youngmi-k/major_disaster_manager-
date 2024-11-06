@@ -32,9 +32,8 @@ class _LoginPageState extends State<LoginPage> {
     final String userId = userIdController.text;
     final String password = passwordController.text;
 
-    // 서버에 로그인 요청을 보냅니다.
     final response = await http.post(
-      Uri.parse('http://localhost:3000/login'), // 로그인 요청 엔드포인트
+      Uri.parse('http://localhost:3000/login'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         'user_id': userId,
@@ -42,14 +41,24 @@ class _LoginPageState extends State<LoginPage> {
       }),
     );
 
-    if (response.statusCode == 200) { // 로그인 성공 시
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
       setState(() {
-        message = '로그인 성공!';
+        message = data['message'];
       });
-      // 로그인 성공 후 HomeScreen으로 이동
+
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(
+          builder: (context) => HomeScreen(
+            userData: {
+              'user_id': data['user_id'],
+              'user_nm': data['user_nm'],
+              'department': data['department'],
+              'area_in_charge': data['area_in_charge'],
+            },
+          ),
+        ),
       );
     } else {
       setState(() {
