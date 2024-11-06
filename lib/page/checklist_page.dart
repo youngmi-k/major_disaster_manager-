@@ -1,13 +1,30 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_core/firebase_core.dart'; // firebase_core 임포트
 import 'package:untitled/page/checkListDetail_page.dart'; // ChecklistDetailPage 파일을 가져옵니다.
 
 class ChecklistPage extends StatefulWidget {
+  final String userNm; // 로그인한 사용자의 이름
+
+  // 사용자 이름을 받는 생성자
+  ChecklistPage({required this.userNm});
+
   @override
   _ChecklistPageState createState() => _ChecklistPageState();
 }
 
 class _ChecklistPageState extends State<ChecklistPage> {
+  @override
+  void initState() {
+    super.initState();
+    _initializeFirebase();
+  }
+
+  Future<void> _initializeFirebase() async {
+    await Firebase.initializeApp();
+  }
+
   @override
   Widget build(BuildContext context) {
     // 현재 날짜 가져오기
@@ -83,17 +100,38 @@ class _ChecklistPageState extends State<ChecklistPage> {
             SizedBox(height: 16),
             // 체크리스트 목록
             Expanded(
-              child: ListView(
-                children: [
-                  _buildChecklistItem('보건의료관 104호(체력단련실)', '수시점검', true),
-                  _buildChecklistItem('보건의료관 116호(강의실)', '정기점검', true),
-                  _buildChecklistItem('보건의료관 207호(모의 수술 실습실)', '수시점검', false),
-                  _buildChecklistItem('보건의료관 215호(강의실)', '정기점검', false),
-                  _buildChecklistItem('보건의료관 305호(치과 임상 실습실)', '수시점검', false),
-                  _buildChecklistItem('보건의료관 316호(영상실습실)', '수시점검', false),
-                  _buildChecklistItem('보건의료관 403호(스프린트실)', '수시점검', false),
-                  _buildChecklistItem('보건의료관 410호(환자 관리학 강의실)', '수시점검', false),
-                ],
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('checklist')
+                    .where('check_user_nm', isEqualTo: widget.userNm) // 로그인한 사용자 이름 필터링
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    return Center(child: Text('데이터를 가져오는 데 실패했습니다: ${snapshot.error}'));
+                  }
+
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return Center(child: Text('조회된 체크리스트가 없습니다.'));
+                  }
+
+                  var checklistItems = snapshot.data!.docs;
+
+                  return ListView.builder(
+                    itemCount: checklistItems.length,
+                    itemBuilder: (context, index) {
+                      var checklist = checklistItems[index].data() as Map<String, dynamic>; // 데이터 형변환
+                      return _buildChecklistItem(
+                        checklist['checklist_nm'],
+                        checklist['check_cycle_nm'],
+                        checklist['check_yn'] == '점검됨',
+                      );
+                    },
+                  );
+                },
               ),
             ),
           ],
@@ -152,5 +190,3 @@ class _ChecklistPageState extends State<ChecklistPage> {
     );
   }
 }
-
-void main() => runApp(MaterialApp(home: ChecklistPage()));

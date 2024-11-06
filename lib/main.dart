@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'home_screen.dart'; // HomeScreen 임포트
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform, // 설정 파일을 통한 Firebase 초기화
+  ); // Firebase 초기화
   runApp(MyApp());
 }
 
