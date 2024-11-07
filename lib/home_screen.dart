@@ -7,12 +7,16 @@ import 'package:untitled/page/education_page.dart';
 import 'main.dart'; // 로그인 페이지 임포트
 
 class HomeScreen extends StatelessWidget {
+  final Map<String, dynamic> userData;
+
+  HomeScreen({required this.userData});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,  // 배경색을 흰색으로 설정
       appBar: AppBar(
-        toolbarHeight: 40.0,  // 높이를 100으로 설정
+        toolbarHeight: 40.0,  // 높이를 40으로 설정
         title: Text(''),
         centerTitle: true,
         backgroundColor: Color(0xFFFDD126),
@@ -23,7 +27,10 @@ class HomeScreen extends StatelessWidget {
             child: OutlinedButton(
               onPressed: () {
                 // 로그아웃 기능
-                print("로그아웃 버튼 클릭됨");
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()), // LoginPage로 이동
+                );
               },
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: Colors.white, width: 1.0), // 테두리 설정
@@ -49,7 +56,7 @@ class HomeScreen extends StatelessWidget {
             ),
             SizedBox(height: 13),
             // 사용자 정보 카드
-            UserCard(),
+            UserCard(userData: userData),  // 동적으로 유저 데이터 전달
 
             // 메뉴 버튼들 - Expanded 대신 shrinkWrap을 사용하여 GridView 스크롤을 활성화
             GridView.count(
@@ -64,7 +71,7 @@ class HomeScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ChecklistPage()),
+                      MaterialPageRoute(builder: (context) => ChecklistPage(userNm: userData['user_nm'], areaInCharge: userData['area_in_charge'] ?? '')),
                     );
                   },
                 ),
@@ -125,10 +132,14 @@ class HomeScreen extends StatelessWidget {
 }
 
 class UserCard extends StatelessWidget {
+  final Map<String, dynamic> userData;
+
+  UserCard({required this.userData});
+
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2.0,  // 그림자 깊이 설정 (1.0 ~ 10.0 등 값 조정 가능)
+      elevation: 2.0,  // 그림자 깊이 설정
       color: Colors.white,  // 카드의 배경색 설정
       margin: EdgeInsets.all(16.0),
       shape: RoundedRectangleBorder(
@@ -148,19 +159,19 @@ class UserCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '강영미',
+                  userData['user_nm'] ?? '이름 없음',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  '42258261',
+                  userData['user_id'] ?? 'ID 없음',
                   style: TextStyle(fontSize: 16),
                 ),
                 Text(
-                  'AI소프트웨어학과',
+                  userData['department'] ?? '부서 없음',
                   style: TextStyle(fontSize: 16),
                 ),
                 Text(
-                  '보건의료관',
+                  userData['area_in_charge'] ?? '책임 구역 없음',
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(height: 10),
@@ -172,8 +183,6 @@ class UserCard extends StatelessWidget {
     );
   }
 }
-
-
 
 // 메뉴 버튼 위젯
 class MenuButton extends StatelessWidget {
@@ -213,7 +222,3 @@ class MenuButton extends StatelessWidget {
     );
   }
 }
-
-void main() => runApp(MaterialApp(
-  home: HomeScreen(),
-));

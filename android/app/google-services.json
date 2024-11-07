@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "722427738117",
+    "firebase_url": "https://sunmoonapp-15e86-default-rtdb.firebaseio.com",
+    "project_id": "sunmoonapp-15e86",
+    "storage_bucket": "sunmoonapp-15e86.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722427738117:android:5bb4f622d9b1287f0b446c",
+        "android_client_info": {
+          "package_name": "com.example.untitled"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1jmyXrc0m2qnbGAjLEDEAjkHfSr8Po2E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

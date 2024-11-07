@@ -1,17 +1,55 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:untitled/page/checkListDetail_page.dart'; // ChecklistDetailPage 파일을 가져옵니다.
+import 'package:firebase_core/firebase_core.dart';
+import 'package:untitled/page/checkListDetail_page.dart';
 
 class ChecklistPage extends StatefulWidget {
+  final String userNm;
+  final String areaInCharge;
+
+  ChecklistPage({required this.userNm, required this.areaInCharge});
+
   @override
   _ChecklistPageState createState() => _ChecklistPageState();
 }
 
 class _ChecklistPageState extends State<ChecklistPage> {
+  int totalItems = 0;
+  int inspectedItems = 0;
+  int notInspectedItems = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFirebase();
+    _fetchChecklistCounts();
+  }
+
+  Future<void> _initializeFirebase() async {
+    await Firebase.initializeApp();
+  }
+
+  void _fetchChecklistCounts() {
+    FirebaseFirestore.instance
+        .collection('checklist')
+        .where('check_user_nm', isEqualTo: widget.userNm)
+        .snapshots()
+        .listen((snapshot) {
+      int total = snapshot.docs.length;
+      int inspected = snapshot.docs.where((doc) => doc['check_yn'] == '점검됨').length;
+      setState(() {
+        totalItems = total;
+        inspectedItems = inspected;
+        notInspectedItems = total - inspected;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    // 현재 날짜 가져오기
     final String today = DateFormat('yyyy.MM.dd').format(DateTime.now());
+    final String areaInCharge = widget.areaInCharge.isNotEmpty ? widget.areaInCharge : '';
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -25,7 +63,6 @@ class _ChecklistPageState extends State<ChecklistPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // 상단 점검 정보
             Card(
               color: Colors.white,
               elevation: 5.0,
@@ -36,14 +73,8 @@ class _ChecklistPageState extends State<ChecklistPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          today, // 현재 날짜
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
-                        Text(
-                          '보건의료관',
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
+                        Text(today, style: TextStyle(fontSize: 16, color: Colors.grey)),
+                        Text(areaInCharge, style: TextStyle(fontSize: 16, color: Colors.grey)),
                       ],
                     ),
                     SizedBox(height: 8),
@@ -56,7 +87,7 @@ class _ChecklistPageState extends State<ChecklistPage> {
                             Icon(Icons.fact_check, color: Colors.amber, size: 30),
                             SizedBox(width: 8),
                             Text(
-                              '8', // 점검 항목 숫자
+                              '$totalItems',
                               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -68,12 +99,8 @@ class _ChecklistPageState extends State<ChecklistPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Expanded(
-                          child: _buildCounter('점검된 항목', 2, Colors.black),
-                        ),
-                        Expanded(
-                          child: _buildCounter('미점검 항목', 6, Colors.red),
-                        ),
+                        Expanded(child: _buildCounter('점검된 항목', inspectedItems, Colors.black)),
+                        Expanded(child: _buildCounter('미점검 항목', notInspectedItems, Colors.red)),
                       ],
                     ),
                   ],
@@ -81,19 +108,39 @@ class _ChecklistPageState extends State<ChecklistPage> {
               ),
             ),
             SizedBox(height: 16),
-            // 체크리스트 목록
             Expanded(
-              child: ListView(
-                children: [
-                  _buildChecklistItem('보건의료관 104호(체력단련실)', '수시점검', true),
-                  _buildChecklistItem('보건의료관 116호(강의실)', '정기점검', true),
-                  _buildChecklistItem('보건의료관 207호(모의 수술 실습실)', '수시점검', false),
-                  _buildChecklistItem('보건의료관 215호(강의실)', '정기점검', false),
-                  _buildChecklistItem('보건의료관 305호(치과 임상 실습실)', '수시점검', false),
-                  _buildChecklistItem('보건의료관 316호(영상실습실)', '수시점검', false),
-                  _buildChecklistItem('보건의료관 403호(스프린트실)', '수시점검', false),
-                  _buildChecklistItem('보건의료관 410호(환자 관리학 강의실)', '수시점검', false),
-                ],
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('checklist')
+                    .where('check_user_nm', isEqualTo: widget.userNm)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    return Center(child: Text('데이터를 가져오는 데 실패했습니다: ${snapshot.error}'));
+                  }
+
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return Center(child: Text('조회된 체크리스트가 없습니다.'));
+                  }
+
+                  var checklistItems = snapshot.data!.docs;
+
+                  return ListView.builder(
+                    itemCount: checklistItems.length,
+                    itemBuilder: (context, index) {
+                      var checklist = checklistItems[index].data() as Map<String, dynamic>;
+                      return _buildChecklistItem(
+                        checklist['checklist_nm'],
+                        checklist['check_cycle_nm'],
+                        checklist['check_yn'] == '점검됨',
+                      );
+                    },
+                  );
+                },
               ),
             ),
           ],
@@ -110,12 +157,7 @@ class _ChecklistPageState extends State<ChecklistPage> {
         RichText(
           text: TextSpan(
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color),
-            children: [
-              TextSpan(
-                text: '$count',
-                style: TextStyle(color: color),
-              ),
-            ],
+            children: [TextSpan(text: '$count')],
           ),
         ),
       ],
@@ -141,10 +183,7 @@ class _ChecklistPageState extends State<ChecklistPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ChecklistDetailPage(
-                title: title,
-                inspection: inspection,
-              ),
+              builder: (context) => ChecklistDetailPage(title: title, inspection: inspection),
             ),
           );
         },
@@ -152,5 +191,3 @@ class _ChecklistPageState extends State<ChecklistPage> {
     );
   }
 }
-
-void main() => runApp(MaterialApp(home: ChecklistPage()));
