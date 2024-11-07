@@ -71,7 +71,7 @@ class HomeScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ChecklistPage(userNm: userData['user_nm'])),
+                      MaterialPageRoute(builder: (context) => ChecklistPage(userNm: userData['user_nm'], areaInCharge: userData['area_in_charge'] ?? '')),
                     );
                   },
                 ),
