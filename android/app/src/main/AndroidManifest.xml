@@ -10,7 +10,7 @@
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <application
-        android:label="untitled"
+        android:label="선문지킴이"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
