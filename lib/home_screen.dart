@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
         toolbarHeight: 40.0,  // 높이를 100으로 설정
         title: Text(''),
         centerTitle: true,
-        backgroundColor: Color(0xFFFDD126),
+        backgroundColor: Color(0xff35455e),
         actions: [
           // OutlinedButton으로 테두리 있는 로그아웃 버튼 생성
           Padding(
@@ -45,7 +45,7 @@ class HomeScreen extends StatelessWidget {
             // 이미지 추가
             Padding(
               padding: const EdgeInsets.all(0.0),
-              child: Image.asset('assets/title_image.png'),  // 이미지 파일 경로
+              child: Image.asset('assets/title_image_navy.png'),  // 이미지 파일 경로
             ),
             SizedBox(height: 13),
             // 사용자 정보 카드
