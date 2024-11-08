@@ -127,6 +127,60 @@ class _ChecklistDetailPageState extends State<ChecklistDetailPage> {
                         );
                       }).toList(),
                     ),
+                    Text('사진 첨부:', style: TextStyle(fontSize: 16)),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: _pickImage,
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            color: Colors.grey[300],
+                            child: Icon(Icons.add_a_photo, size: 40),
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: List.generate(_selectedImages.length, (index) {
+                                return Stack(
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(right: 16),
+                                      width: 100,
+                                      height: 100,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                      ),
+                                      child: Image.file(
+                                        _selectedImages[index],
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 4,
+                                      right: 4,
+                                      child: GestureDetector(
+                                        onTap: () => _removeImage(index),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.black.withOpacity(0.5),
+                                          ),
+                                          child: Icon(Icons.close, color: Colors.white, size: 20),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     if (item.selectedOption == '부적합') ...[
                       SizedBox(height: 16),
                       Text('부적합 사유:', style: TextStyle(fontSize: 16)),
@@ -139,60 +193,6 @@ class _ChecklistDetailPageState extends State<ChecklistDetailPage> {
                         ),
                       ),
                       SizedBox(height: 16),
-                      Text('사진 첨부:', style: TextStyle(fontSize: 16)),
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: _pickImage,
-                            child: Container(
-                              width: 100,
-                              height: 100,
-                              color: Colors.grey[300],
-                              child: Icon(Icons.add_a_photo, size: 40),
-                            ),
-                          ),
-                          SizedBox(width: 16),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: List.generate(_selectedImages.length, (index) {
-                                  return Stack(
-                                    children: [
-                                      Container(
-                                        margin: EdgeInsets.only(right: 16),
-                                        width: 100,
-                                        height: 100,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.grey),
-                                        ),
-                                        child: Image.file(
-                                          _selectedImages[index],
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      Positioned(
-                                        top: 4,
-                                        right: 4,
-                                        child: GestureDetector(
-                                          onTap: () => _removeImage(index),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.black.withOpacity(0.5),
-                                            ),
-                                            child: Icon(Icons.close, color: Colors.white, size: 20),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                }),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                     ],
                   ],
                 ),
