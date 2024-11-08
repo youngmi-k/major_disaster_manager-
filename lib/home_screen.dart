@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:untitled/page/notice_page.dart';
 import 'package:untitled/page/safetyVoice_page.dart';
 import 'package:untitled/page/checkList_page.dart';
 import 'package:untitled/page/riskAssessment_page.dart';
 import 'package:untitled/page/education_page.dart';
-import 'main.dart'; // 로그인 페이지 임포트
+import 'package:untitled/page/seriousAccidentNotification_page.dart';
 
 class HomeScreen extends StatelessWidget {
   final Map<String, dynamic> userData;
@@ -19,7 +20,7 @@ class HomeScreen extends StatelessWidget {
         toolbarHeight: 40.0,  // 높이를 40으로 설정
         title: Text(''),
         centerTitle: true,
-        backgroundColor: Color(0xFFFDD126),
+        backgroundColor: Color(0xff35455e),
         actions: [
           // OutlinedButton으로 테두리 있는 로그아웃 버튼 생성
           Padding(
@@ -52,7 +53,7 @@ class HomeScreen extends StatelessWidget {
             // 이미지 추가
             Padding(
               padding: const EdgeInsets.all(0.0),
-              child: Image.asset('assets/title_image.png'),  // 이미지 파일 경로
+              child: Image.asset('assets/title_image_navy.png'),  // 이미지 파일 경로
             ),
             SizedBox(height: 13),
             // 사용자 정보 카드
@@ -109,7 +110,10 @@ class HomeScreen extends StatelessWidget {
                   icon: Icons.notifications,
                   label: '중대재해 알림',
                   onPressed: () {
-                    // 중대재해 알림 버튼 클릭 시 액션
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SeriousAccidentNoticePage(SeriousAccidentNotices: SeriousAccidentNotices)),
+                    );
                   },
                 ),
                 MenuButton(
