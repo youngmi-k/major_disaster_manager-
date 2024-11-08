@@ -169,8 +169,8 @@ class _NewRiskEvaluationPageState extends State<NewRiskEvaluationPage> {
                   backgroundColor: Colors.black,
                 ),
                 child: Text(
-                  '등록',
-                  style: TextStyle(color: Colors.white)
+                    '등록',
+                    style: TextStyle(color: Colors.white)
                 ),
               ),
             ),

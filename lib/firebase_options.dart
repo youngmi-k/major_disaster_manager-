@@ -25,9 +25,15 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -39,16 +45,6 @@ class DefaultFirebaseOptions {
         );
     }
   }
-
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyA7yRo_luwObNzNqaKfxcJwZEdFMrOIwcU',
-    appId: '1:722427738117:web:cb4e176a5efb4f020b446c',
-    messagingSenderId: '722427738117',
-    projectId: 'sunmoonapp-15e86',
-    authDomain: 'sunmoonapp-15e86.firebaseapp.com',
-    databaseURL: 'https://sunmoonapp-15e86-default-rtdb.firebaseio.com',
-    storageBucket: 'sunmoonapp-15e86.firebasestorage.app',
-  );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyB1jmyXrc0m2qnbGAjLEDEAjkHfSr8Po2E',
@@ -69,23 +65,14 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.example.untitled',
   );
 
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBTyIPz_jNpBXU7_utOXYTG0v6Ntsi7B6o',
-    appId: '1:722427738117:ios:0603062b7f46df3f0b446c',
-    messagingSenderId: '722427738117',
-    projectId: 'sunmoonapp-15e86',
-    databaseURL: 'https://sunmoonapp-15e86-default-rtdb.firebaseio.com',
-    storageBucket: 'sunmoonapp-15e86.firebasestorage.app',
-    iosBundleId: 'com.example.untitled',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
+  static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyA7yRo_luwObNzNqaKfxcJwZEdFMrOIwcU',
-    appId: '1:722427738117:web:938f74634cb6c7930b446c',
+    appId: '1:722427738117:web:cb4e176a5efb4f020b446c',
     messagingSenderId: '722427738117',
     projectId: 'sunmoonapp-15e86',
     authDomain: 'sunmoonapp-15e86.firebaseapp.com',
     databaseURL: 'https://sunmoonapp-15e86-default-rtdb.firebaseio.com',
     storageBucket: 'sunmoonapp-15e86.firebasestorage.app',
   );
+
 }
