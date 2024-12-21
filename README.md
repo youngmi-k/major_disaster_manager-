@@ -1,4 +1,4 @@
-![title_image_navy](https://github.com/user-attachments/assets/d04dc5d7-89c2-4cc7-9a22-cea683b47aa6)
+![선문지킴이-발표자료-001](https://github.com/user-attachments/assets/04c7d265-868e-4500-a0ba-8d928b772eb4)
 # 중대재해 안전 점검 앱 개발(기업 연계)
 
 ## 🖥️프로젝트 소개
@@ -30,7 +30,7 @@
 
 ## 👀서비스 화면
 ### [▶️시연영상 보러가기](https://youtu.be/98KPh1BV_ns?si=F5Eq-_dyC5H6rjF8)
-![006](https://github.com/user-attachments/assets/adb592a1-9251-42de-8dc3-f593d866b6b1)
+![006](https://github.com/user-attachments/assets/743f9090-9893-47af-8440-a0c608f80783)
 ![007](https://github.com/user-attachments/assets/5d909bd8-a2db-4c02-86a1-3127e2893919)
 ![008](https://github.com/user-attachments/assets/2e16347f-4355-49c5-9e34-ecee4ec484ff)
 ![009](https://github.com/user-attachments/assets/146f9097-c2a3-4789-903f-cd476dedd247)
