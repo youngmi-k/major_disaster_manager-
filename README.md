@@ -28,8 +28,7 @@
 - **중대재해 알림 기능**
 - **교육현황 기능**
 
-## 👀서비스 화면
-### [▶️시연영상 보러가기](https://youtu.be/98KPh1BV_ns?si=F5Eq-_dyC5H6rjF8)
+## 👀서비스 화면 [▶️시연영상 보러가기](https://youtu.be/98KPh1BV_ns?si=F5Eq-_dyC5H6rjF8)
 ![006](https://github.com/user-attachments/assets/743f9090-9893-47af-8440-a0c608f80783)
 ![007](https://github.com/user-attachments/assets/5d909bd8-a2db-4c02-86a1-3127e2893919)
 ![008](https://github.com/user-attachments/assets/2e16347f-4355-49c5-9e34-ecee4ec484ff)
